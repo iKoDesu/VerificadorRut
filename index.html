@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValidaRUT - Verificador y Generador de RUT Chileno</title>
+    <meta name="description" content="Validador y calculador de dígito verificador de RUT chileno. Simple, rápido y sin recargar la página.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇨🇱</text></svg>">
+</head>
+<body>
+    <div class="background-decorations">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <span class="flag-icon">🇨🇱</span>
+                <h1>Valida<span>RUT</span></h1>
+            </div>
+            <p class="subtitle">Verifica RUTs chilenos y calcula su dígito verificador al instante.</p>
+        </header>
+
+        <main class="app-card">
+            <!-- Tabs Navigation -->
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-verify" onclick="switchTab('verify')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                    Verificar RUT
+                </button>
+                <button class="tab-btn" id="tab-calculate" onclick="switchTab('calculate')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-binary"><rect x="14" width="4" height="6" ry="2"/><rect x="14" y="10" width="4" height="6" ry="2"/><path d="M6 20h4"/><path d="M14 20h4"/><path d="M8 2v16"/><path d="M6 4h4"/></svg>
+                    Calcular DV
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tab-content">
+                <!-- Verify Tab -->
+                <div class="pane active" id="pane-verify">
+                    <div class="input-group">
+                        <label for="rut-input">Ingresa el RUT a verificar</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="rut-input" placeholder="Ej: 19.834.790-6 o 198347906" autocomplete="off" spellcheck="false">
+                            <button class="clear-btn" id="clear-verify-btn" aria-label="Limpiar entrada">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <p class="input-hint">Formatos soportados: 198347906, 19834790-6, 19.834.790-6</p>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div class="result-box" id="verify-result">
+                        <div class="result-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-fingerprint"><path d="M2 12a10 10 0 0 1 13-9.54"/><path d="M8 20A8 8 0 0 1 4 12"/><path d="M5 20a6 6 0 0 1 3-9.54"/><path d="M12 2a10 10 0 0 1 10 10v0a8 8 0 0 1-5 7.4"/><path d="M15 20a6 6 0 0 1-3-9.54"/><path d="M19 12a6 6 0 0 0-6-6"/><path d="M12 14v4"/><path d="M16 14v2"/></svg>
+                            <p>Escribe un RUT para verificar su validez</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculate Tab -->
+                <div class="pane" id="pane-calculate">
+                    <div class="input-group">
+                        <label for="calc-input">Ingresa el número (sin dígito verificador)</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="calc-input" placeholder="Ej: 19834790 o 19.834.790" autocomplete="off" spellcheck="false">
+                            <button class="clear-btn" id="clear-calc-btn" aria-label="Limpiar entrada">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <p class="input-hint">Solo números, se ignoran puntos, guiones y letras</p>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div class="result-box" id="calc-result">
+                        <div class="result-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-help-circle"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <p>Escribe los números del RUT para calcular su DV</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Hecho con ❤️ en Chile • <a href="https://github.com/JoseD/IdentificadorRut" target="_blank" rel="noopener noreferrer" id="repo-link">Ver en GitHub</a></p>
+        </footer>
+    </div>
+
+    <!-- Script file -->
+    <script src="script.js"></script>
+</body>
+</html>
