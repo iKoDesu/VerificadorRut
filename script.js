@@ -121,6 +121,24 @@ function validateVerifyInput() {
                 <div class="result-info">
                     <div class="result-status">RUT Válido</div>
                     <div class="result-details">${formatted}</div>
+                    
+                    <div class="copy-actions-container">
+                        <span class="copy-label">Copiar formato:</span>
+                        <div class="copy-buttons-row">
+                            <button class="copy-btn-mini" onclick="copyToClipboard('${formatted}', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                <span>${formatted}</span>
+                            </button>
+                            <button class="copy-btn-mini" onclick="copyToClipboard('${body}-${dv}', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                <span>${body}-${dv}</span>
+                            </button>
+                            <button class="copy-btn-mini" onclick="copyToClipboard('${body}${dv}', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                <span>${body}${dv}</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -189,7 +207,7 @@ function validateCalcInput() {
                 <div class="calc-info">
                     <div class="calc-title">RUT Completo</div>
                     <div class="calc-formatted-rut" id="full-rut-text">${fullRut}</div>
-                    <button class="copy-btn" id="copy-rut-btn" onclick="copyToClipboard('${fullRut}')">
+                    <button class="copy-btn" id="copy-rut-btn" onclick="copyToClipboard('${fullRut}', this)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                         <span>Copiar RUT</span>
                     </button>
@@ -204,24 +222,37 @@ function validateCalcInput() {
 }
 
 // Copy to Clipboard Utility
-function copyToClipboard(text) {
+function copyToClipboard(text, btnElementOrId) {
+    let copyBtn;
+    if (typeof btnElementOrId === 'string') {
+        copyBtn = document.getElementById(btnElementOrId);
+    } else if (btnElementOrId) {
+        copyBtn = btnElementOrId;
+    } else {
+        copyBtn = document.getElementById('copy-rut-btn');
+    }
+
     navigator.clipboard.writeText(text).then(() => {
-        const copyBtn = document.getElementById('copy-rut-btn');
         if (!copyBtn) return;
         
         copyBtn.classList.add('copied');
         const span = copyBtn.querySelector('span');
         const svg = copyBtn.querySelector('svg');
+        const originalText = span ? span.textContent : 'Copiar';
         
-        span.textContent = '¡Copiado!';
+        if (span) span.textContent = '¡Copiado!';
+        
         // Change SVG to Checkmark
-        const oldSvgInner = svg.innerHTML;
-        svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        let oldSvgInner = '';
+        if (svg) {
+            oldSvgInner = svg.innerHTML;
+            svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        }
         
         setTimeout(() => {
             copyBtn.classList.remove('copied');
-            span.textContent = 'Copiar RUT';
-            svg.innerHTML = oldSvgInner;
+            if (span) span.textContent = originalText;
+            if (svg) svg.innerHTML = oldSvgInner;
         }, 2000);
     }).catch(err => {
         console.error('Error al copiar al portapapeles: ', err);
